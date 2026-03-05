@@ -320,30 +320,7 @@ It will:
 |--------|----------|-------------|
 | GET | `/api/health` | Health check |
 | GET | `/api/cache-status` | View in-memory AQI cache |
-| GET | `/api/evaluate/<site_number>` | Model evaluation metrics |
 
-**Example Request:**
-```bash
-GET /api/forecast/1?hours=24
-```
-**Example Response:**
-```json
-{
-  "success": true,
-  "site_number": 1,
-  "forecast_origin": "2025-01-01T12:00:00",
-  "hours": 24,
-  "forecast": [
-    {
-      "timestamp": "2025-01-01T13:00:00",
-      "horizon": 1,
-      "O3_predicted": 52.3,
-      "NO2_predicted": 38.1,
-      "model_version": "xgb_direct_1_48_v1"
-    }
-  ]
-}
-```
 
 ---
 
