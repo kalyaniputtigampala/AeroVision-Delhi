@@ -24,7 +24,28 @@ if firebase_json:
         f.write(firebase_json)
 
 _aqi_cache = {}
+import gdown
+import zipfile
+import os
 
+def download_models():
+    """Download and extract ML models from Google Drive."""
+    if not os.path.exists('models') or len(os.listdir('models')) < 5:
+        print("Downloading ML models...")
+        gdown.download(
+            'https://drive.google.com/file/d/1_Ks491eX5hcubDWOK7k9CqjG01GNkfAS/view?usp=sharing',
+            'models.zip',
+            quiet=False
+        )
+        print("Extracting models...")
+        with zipfile.ZipFile('models.zip', 'r') as z:
+            z.extractall('.')
+        os.remove('models.zip')
+        print("✓ Models ready!")
+    else:
+        print("✓ Models already present")
+
+download_models()
 # Import hybrid prediction service if available
 try:
     from prediction_service import HybridPredictionService

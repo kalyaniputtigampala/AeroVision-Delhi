@@ -79,3 +79,4 @@ threadpoolctl==3.6.0
 typing_extensions==4.15.0
 pycparser==3.0
 cffi==2.0.0
+down==4.7.3
