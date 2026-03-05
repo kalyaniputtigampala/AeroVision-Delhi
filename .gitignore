@@ -62,3 +62,8 @@ logs/
 .coverage
 htmlcov/
 .pytest_cache/
+
+# Data exports (large CSV files)
+backend/exports/
+exports/
+*.csv

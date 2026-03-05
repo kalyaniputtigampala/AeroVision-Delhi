@@ -13,6 +13,14 @@ from apscheduler.triggers.interval import IntervalTrigger
 import atexit
 import numpy as np
 from validators import validate_site_number, validate_forecast_hours, validate_fcm_registration
+import json
+import os
+
+# Write Firebase service account from environment variable (for Render deployment)
+firebase_json = os.getenv('FIREBASE_SERVICE_ACCOUNT_JSON')
+if firebase_json:
+    with open('firebase-service-account.json', 'w') as f:
+        f.write(firebase_json)
 
 _aqi_cache = {}
 
@@ -1180,4 +1188,4 @@ if __name__ == '__main__':
     print(f"  NO₂ Model: XGBoost")
     print("="*70)
 
-    app.run(debug=True,port=5000, host='0.0.0.0')
+    app.run(debug=False,port=5000, host='0.0.0.0')
