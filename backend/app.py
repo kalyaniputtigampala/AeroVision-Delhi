@@ -38,20 +38,29 @@ def download_models():
     """Download and extract ML models from Google Drive."""
     if not os.path.exists('models') or len(os.listdir('models')) < 5:
         print("Downloading ML models...")
-        gdown.download(
-            'https://drive.google.com/file/d/1_Ks491eX5hcubDWOK7k9CqjG01GNkfAS/view?usp=sharing',
-            'models.zip',
-            quiet=False
-        )
-        print("Extracting models...")
-        with zipfile.ZipFile('models.zip', 'r') as z:
-            z.extractall('.')
-        os.remove('models.zip')
-        print("✓ Models ready!")
+        try:
+            # fuzzy=True handles Google Drive view links correctly
+            gdown.download(
+                id='1_Ks491eX5hcubDWOK7k9CqjG01GNkfAS',
+                output='models.zip',
+                quiet=False,
+                fuzzy=True
+            )
+            # Verify it's actually a zip file
+            if not os.path.exists('models.zip') or os.path.getsize('models.zip') < 1000:
+                print("✗ Download failed or file too small")
+                return
+            
+            print("Extracting models...")
+            with zipfile.ZipFile('models.zip', 'r') as z:
+                z.extractall('.')
+            os.remove('models.zip')
+            print("✓ Models ready!")
+        except Exception as e:
+            print(f"✗ Model download failed: {e}")
+            print("  App will use statistical fallback predictions")
     else:
         print("✓ Models already present")
-
-download_models()
 # Import hybrid prediction service if available
 try:
     from prediction_service import HybridPredictionService
