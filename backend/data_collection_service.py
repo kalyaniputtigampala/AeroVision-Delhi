@@ -264,6 +264,25 @@ class DataCollectionService:
 # RUN
 # ==========================================================
 if __name__ == "__main__":
+    # ── Functions for background thread in app.py ─────────────────────────────────
+    _service_instance = None
+
+    def run_once():
+        """Run backfill + current hour collection once on startup."""
+        global _service_instance
+        _service_instance = DataCollectionService()
+        _service_instance.rolling_backfill()
+        _service_instance.collect_hourly_data()
+
+    def schedule_collection():
+        """Schedule hourly collection after run_once() has been called."""
+        global _service_instance
+        if _service_instance is None:
+            _service_instance = DataCollectionService()
+        schedule.every().hour.at(":00").do(_service_instance.collect_hourly_data)
+        while True:
+            schedule.run_pending()
+            time.sleep(60)
     service = DataCollectionService()
     try:
         service.start()

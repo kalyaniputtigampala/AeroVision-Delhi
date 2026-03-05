@@ -15,6 +15,7 @@ import numpy as np
 from validators import validate_site_number, validate_forecast_hours, validate_fcm_registration
 import json
 import os
+import threading
 
 # Write Firebase service account from environment variable (for Render deployment)
 firebase_json = os.getenv('FIREBASE_SERVICE_ACCOUNT_JSON')
@@ -131,7 +132,16 @@ def get_site_details(site_number):
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()
-
+def run_data_collection():
+    """Run data collection service in background thread."""
+    import time
+    try:
+        from data_collection_service import run_once, schedule_collection
+        print("Starting data collection service in background...")
+        run_once()  # Run immediately on startup
+        schedule_collection()  # Then run hourly
+    except Exception as e:
+        print(f"Data collection service error: {e}")
 @app.route('/api/current/<int:site_number>', methods=['GET'])
 def get_current_aqi(site_number):
     valid, err = validate_site_number(site_number)
@@ -1187,5 +1197,7 @@ if __name__ == '__main__':
     print(f"  O₃ Model: XGBoost")
     print(f"  NO₂ Model: XGBoost")
     print("="*70)
+    collection_thread = threading.Thread(target=run_data_collection, daemon=True)
+    collection_thread.start()
 
     app.run(debug=False,port=5000, host='0.0.0.0')
