@@ -1,0 +1,64 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+venv/
+env/
+.venv/
+.env/
+
+# ── Environment & Secrets (NEVER commit these) ────────────────────────────────
+.env
+.env.local
+.env.production
+firebase-service-account.json
+*.pem
+*.key
+
+# ── ML Models (large binary files) ───────────────────────────────────────────
+models/*.pkl
+hybrid_models/*.pkl
+*.pkl
+*.h5
+*.model
+
+# ── Database ──────────────────────────────────────────────────────────────────
+*.sqlite
+*.db
+*.sql
+
+# ── Node / React ──────────────────────────────────────────────────────────────
+node_modules/
+build/
+dist/
+.npm/
+.eslintcache
+
+# ── Data files (can be large) ─────────────────────────────────────────────────
+data/*.csv
+data/*.xlsx
+data/*.xls
+
+# ── IDE & OS ──────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Coverage & Testing ────────────────────────────────────────────────────────
+.coverage
+htmlcov/
+.pytest_cache/

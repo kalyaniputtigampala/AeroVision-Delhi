@@ -1,0 +1,982 @@
+/* ================= ROOT ================= */
+body {
+  background: #f0f9ff;
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+
+/* ================= MAIN WRAPPER ================= */
+.hotspot-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ================= HEADER ================= */
+.hotspot-header {
+  width: 100vw;              /* FULL WINDOW WIDTH */
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  background: linear-gradient(135deg, #0891b2 0%, #0e7490 50%, #164e63 100%);
+  color: white;
+  padding: 80px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hotspot-header h2 {
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.hotspot-header p {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* ================= MAP ================= */
+.map-container {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 2px solid #cffafe;
+  box-shadow: 0 4px 20px rgba(8, 145, 178, 0.12);
+   margin-bottom: 3rem;
+}
+
+.leaflet-map {
+  width: 100%;
+  height: 520px;
+  border-radius: 14px;
+}
+
+/* REMOVE ALL ANIMATION */
+.aqi-pulse {
+  animation: none !important;
+}
+
+/* ================= AQI BOARD (if used) ================= */
+.aqi-board {
+  min-width: 44px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 14px;
+  background: white;
+  color: #1a3a52;
+  border: 2px solid #cffafe;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+/* ================= RANKINGS ================= */
+.rankings-section {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(8, 145, 178, 0.1);
+  border: 2px solid #cffafe;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.section-header svg {
+  color: #0891b2;
+}
+
+.section-header h2 {
+  font-size: 1.6rem;
+  color: #1a3a52;
+  font-weight: 700;
+}
+
+.section-description {
+  color: #5a7a8f;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.rankings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ranking-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem;
+  background: #f0f9ff;
+  border-radius: 12px;
+  border-left: 4px solid;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.ranking-card:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(8, 145, 178, 0.15);
+}
+
+.rank-number {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+
+.rank-info {
+  flex: 1;
+}
+
+.rank-info h4 {
+  font-size: 1.1rem;
+  color: #1a3a52;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+
+.rank-coords {
+  font-size: 0.85rem;
+  color: #5a7a8f;
+  font-family: 'Courier New', monospace;
+}
+
+.rank-metrics {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.metric-label {
+  font-size: 0.8rem;
+  color: #5a7a8f;
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: 1.3rem;
+  color: #1a3a52;
+  font-weight: 700;
+}
+
+.view-on-map {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #0891b2;
+  font-weight: 600;
+  border: 1px solid #cffafe;
+}
+/* ================= STATS ================= */
+.stats-overview {
+  margin-top: 2.5rem;
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  border: 2px solid #cffafe;
+  box-shadow: 0 4px 20px rgba(8, 145, 178, 0.12);
+  margin-bottom: 40px;
+}
+
+.stats-overview h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1a3a52;
+  margin-bottom: 1.5rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  padding: 1.5rem;
+  border-radius: 14px;
+  text-align: center;
+  border: 2px solid;
+}
+
+.stat-card h3 {
+  font-size: 2.4rem;
+  font-weight: 800;
+}
+
+.stat-card p {
+  font-weight: 600;
+  color: #1a3a52;
+}
+
+/* AQI COLORS */
+.critical-stat {
+  background: #fee2e2;
+  border-color: #dc2626;
+}
+.critical-stat h3 { color: #dc2626; }
+
+.high-stat {
+  background: #fef3c7;
+  border-color: #f59e0b;
+}
+.high-stat h3 { color: #f59e0b; }
+
+.moderate-stat {
+  background: #dbeafe;
+  border-color: #3b82f6;
+}
+.moderate-stat h3 { color: #3b82f6; }
+
+.safe-stat {
+  background: #d1fae5;
+  border-color: #10b981;
+}
+.safe-stat h3 { color: #10b981; }
+
+/* ================= LOADING ================= */
+.map-loading {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #5a7a8f;
+  font-weight: 500;
+}
+/* 80% centered content */
+.content-80 {
+  width: 90%;
+  margin: 3rem auto 0;
+}
+
+/* Mobile safety */
+@media (max-width: 1024px) {
+  .content-80 {
+    width: 95%;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.hotspot-detection {
+  min-height: 100vh;
+  background: #f0f9ff;
+}
+
+/* Header */
+.hotspot-header {
+  background: linear-gradient(135deg, #0891b2 0%, #0e7490 50%, #164e63 100%);
+  color: white;
+  padding: 80px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hotspot-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 25% 40%, rgba(20, 184, 166, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 75% 60%, rgba(6, 182, 212, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hotspot-header h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Container */
+.hotspot-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Map Section */
+.map-section {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(8, 145, 178, 0.1);
+  border: 2px solid #cffafe;
+  transition: all 0.3s ease;
+}
+
+.map-section.expanded {
+  position: fixed;
+  top: 100px;
+  left: 2rem;
+  right: 2rem;
+  bottom: 2rem;
+  z-index: 999;
+  overflow-y: auto;
+  max-height: calc(100vh - 120px);
+}
+
+.map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.map-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.8rem;
+  color: #1a3a52;
+  font-weight: 700;
+}
+
+.map-header h2 svg {
+  color: #0891b2;
+}
+
+.map-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.control-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: #f0f9ff;
+  color: #0891b2;
+  border: 2px solid #cffafe;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.control-btn:hover {
+  background: #e0f2fe;
+  border-color: #0891b2;
+  transform: translateY(-2px);
+}
+
+.expand-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: #0891b2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.expand-btn:hover {
+  background: #0e7490;
+  transform: translateY(-2px);
+}
+
+/* Map Container */
+.map-wrapper {
+  position: relative;
+  background: #e0f2fe;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid #cffafe;
+}
+
+.leaflet-map {
+  width: 100%;
+  height: 500px;
+  border-radius: 14px;
+  z-index: 1;
+}
+
+.map-section.expanded .leaflet-map {
+  height: 600px;
+}
+
+/* Custom Marker Styles */
+.custom-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.marker-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marker-pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+@keyframes pulse-animation {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.1;
+  }
+}
+
+.marker-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.marker-circle:hover {
+  transform: scale(1.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.marker-aqi {
+  color: white;
+  font-weight: 800;
+  font-size: 14px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Custom Popup Styles */
+.custom-popup .leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.custom-popup .leaflet-popup-content {
+  margin: 0;
+  width: 250px !important;
+}
+
+.map-popup {
+  padding: 1rem;
+}
+
+.map-popup h3 {
+  font-size: 1.2rem;
+  color: #1a3a52;
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+}
+
+.popup-aqi {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 800;
+}
+
+.popup-category {
+  color: #5a7a8f;
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+.popup-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.8rem;
+  padding: 0.8rem;
+  background: #f0f9ff;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #1a3a52;
+}
+
+.popup-coords {
+  font-size: 0.85rem;
+  color: #5a7a8f;
+  font-family: 'Courier New', monospace;
+  text-align: center;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e0f2fe;
+}
+
+/* Map Legend */
+.map-legend {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border: 2px solid #cffafe;
+  z-index: 1000;
+  max-width: 200px;
+}
+
+.map-legend h4 {
+  font-size: 0.9rem;
+  color: #1a3a52;
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+}
+
+.legend-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #5a7a8f;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+/* Selected Site Info */
+.selected-site-info {
+  margin-top: 1.5rem;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 2px solid #0891b2;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.info-header h3 {
+  font-size: 1.3rem;
+  color: #0891b2;
+  font-weight: 700;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #5a7a8f;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: #0891b2;
+  color: white;
+}
+
+.info-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.info-label {
+  font-size: 0.85rem;
+  color: #5a7a8f;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 1.1rem;
+  color: #1a3a52;
+  font-weight: 700;
+}
+
+/* Rankings Section */
+.rankings-section {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(8, 145, 178, 0.1);
+  border: 2px solid #cffafe;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.section-header svg {
+  color: #0891b2;
+}
+
+.section-header h2 {
+  font-size: 1.6rem;
+  color: #1a3a52;
+  font-weight: 700;
+}
+
+.section-description {
+  color: #5a7a8f;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.rankings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ranking-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem;
+  background: #f0f9ff;
+  border-radius: 12px;
+  border-left: 4px solid;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.ranking-card:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(8, 145, 178, 0.15);
+}
+
+.rank-number {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+
+.rank-info {
+  flex: 1;
+}
+
+.rank-info h4 {
+  font-size: 1.1rem;
+  color: #1a3a52;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+
+.rank-coords {
+  font-size: 0.85rem;
+  color: #5a7a8f;
+  font-family: 'Courier New', monospace;
+}
+
+.rank-metrics {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.metric-label {
+  font-size: 0.8rem;
+  color: #5a7a8f;
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: 1.3rem;
+  color: #1a3a52;
+  font-weight: 700;
+}
+
+.view-on-map {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #0891b2;
+  font-weight: 600;
+  border: 1px solid #cffafe;
+}
+
+/* Statistics Overview */
+.stats-overview {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(8, 145, 178, 0.1);
+  border: 2px solid #cffafe;
+}
+
+.stats-overview h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.8rem;
+  color: #1a3a52;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.stats-overview h2 svg {
+  color: #0891b2;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  border: 2px solid;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(8, 145, 178, 0.15);
+}
+
+.critical-stat {
+  background: linear-gradient(135deg, #FEE2E2, #FECACA);
+  border-color: #DC2626;
+}
+
+.high-stat {
+  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  border-color: #F59E0B;
+}
+
+.moderate-stat {
+  background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
+  border-color: #3B82F6;
+}
+
+.safe-stat {
+  background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+  border-color: #10B981;
+}
+
+.stat-card h3 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 800;
+}
+
+.critical-stat h3 { color: #DC2626; }
+.high-stat h3 { color: #F59E0B; }
+.moderate-stat h3 { color: #3B82F6; }
+.safe-stat h3 { color: #10B981; }
+
+.stat-card p {
+  font-size: 1rem;
+  color: #1a3a52;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.stat-subtext {
+  font-size: 0.85rem;
+  color: #5a7a8f;
+}
+
+/* Loading State */
+.hotspot-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1.5rem;
+}
+.map-container {
+  height: 100%;
+  min-height: 650px;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #cffafe;
+  border-top-color: #0891b2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+.leaflet-map {
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+}
+
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.hotspot-loading p {
+  color: #5a7a8f;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hotspot-header h1 {
+    font-size: 2.2rem;
+  }
+  
+  .hotspot-container {
+    padding: 1rem;
+  }
+  
+  .map-section.expanded {
+    left: 1rem;
+    right: 1rem;
+    top: 90px;
+  }
+  
+  .map-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .map-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .rank-metrics {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .info-body {
+    grid-template-columns: 1fr;
+  }
+  
+  .map-legend {
+    position: static;
+    margin-top: 1rem;
+    max-width: 100%;
+  }
+  
+  .ranking-card {
+    flex-wrap: wrap;
+  }
+  
+  .view-on-map {
+    width: 100%;
+    justify-content: center;
+  }
+}
