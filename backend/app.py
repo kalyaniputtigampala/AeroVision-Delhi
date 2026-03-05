@@ -1,3 +1,14 @@
+import json
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+# ── Write Firebase service account FIRST before any imports ──
+firebase_json = os.getenv('FIREBASE_SERVICE_ACCOUNT_JSON')
+if firebase_json:
+    with open('firebase-service-account.json', 'w') as f:
+        f.write(firebase_json)
+    print("✓ Firebase service account written from environment")
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from datetime import datetime, timedelta
@@ -13,15 +24,10 @@ from apscheduler.triggers.interval import IntervalTrigger
 import atexit
 import numpy as np
 from validators import validate_site_number, validate_forecast_hours, validate_fcm_registration
-import json
-import os
+
 import threading
 
-# Write Firebase service account from environment variable (for Render deployment)
-firebase_json = os.getenv('FIREBASE_SERVICE_ACCOUNT_JSON')
-if firebase_json:
-    with open('firebase-service-account.json', 'w') as f:
-        f.write(firebase_json)
+
 
 _aqi_cache = {}
 import gdown
@@ -916,9 +922,7 @@ except Exception as e:
 # Register FCM token
 @app.route('/api/notifications/register', methods=['POST'])
 def register_token():
-    valid, err = validate_site_number(site_number)
-    if not valid:
-        return err
+    
     session = get_db_session()
     try:
         data = request.json
@@ -1152,40 +1156,29 @@ def get_weather(site_number):
 scheduler = None
 
 def init_scheduler():
-    """Initialize scheduler only once using file lock"""
-    global scheduler, _scheduler_lock_file
+    """Initialize FCM alert scheduler."""
+    global scheduler
 
     if not fcm_service or not fcm_service.firebase_enabled:
         print("⏭️  FCM service not available, skipping scheduler")
         return
 
-    # Only run in the main Werkzeug process, not the reloader
-    if os.environ.get('WERKZEUG_RUN_MAIN') != 'true':
-        print(f"⏭️  Skipping scheduler in reloader process - PID {os.getpid()}")
-        return
-
-    # Use a file lock to guarantee only ONE scheduler across all processes
-    # Use a socket lock (works on Windows AND Linux)
-    import socket
-    _lock_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        _lock_socket.bind(('127.0.0.1', 47200))  # Any unused port number
-        print(f"✓ Acquired scheduler lock - PID {os.getpid()}")
-    except OSError:
-        print(f"⏭️  Scheduler already running in another process, skipping - PID {os.getpid()}")
-        return
-
+    # Skip duplicate scheduler check — only run once
     if scheduler is not None:
         print("⏭️  Scheduler already initialized")
         return
 
+    import socket
+    _lock_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        _lock_socket.bind(('127.0.0.1', 47200))
+        print(f"✓ Acquired scheduler lock - PID {os.getpid()}")
+    except OSError:
+        print(f"⏭️  Scheduler already running in another process - PID {os.getpid()}")
+        return
+
     scheduler = BackgroundScheduler(daemon=True)
     scheduler.start()
-
-    try:
-        scheduler.remove_job('fcm_alert_job')
-    except:
-        pass
 
     scheduler.add_job(
         func=fcm_service.check_and_send_alerts,
@@ -1202,7 +1195,6 @@ def init_scheduler():
             scheduler.shutdown(wait=False)
         try:
             _lock_socket.close()
-            print("✓ Scheduler lock released")
         except:
             pass
 
