@@ -30,37 +30,45 @@ import threading
 
 
 _aqi_cache = {}
-import gdown
-import zipfile
-import os
-
 def download_models():
     """Download and extract ML models from Google Drive."""
     if not os.path.exists('models') or len(os.listdir('models')) < 5:
         print("Downloading ML models...")
         try:
-            # fuzzy=True handles Google Drive view links correctly
-            gdown.download(
-                id='1_Ks491eX5hcubDWOK7k9CqjG01GNkfAS',
+            import urllib.request
+            file_id = '1_CDmu5aLmYNU7y5i5eikzGTxMhgh1gY2'
+            
+            # Use gdown with fuzzy flag
+            output = gdown.download(
+                url=f'https://drive.google.com/uc?id={file_id}&export=download&confirm=t',
                 output='models.zip',
                 quiet=False,
                 fuzzy=True
             )
-            # Verify it's actually a zip file
-            if not os.path.exists('models.zip') or os.path.getsize('models.zip') < 1000:
-                print("✗ Download failed or file too small")
-                return
+            
+            if output is None:
+                raise Exception("gdown returned None - download failed")
+            
+            size = os.path.getsize('models.zip')
+            print(f"Downloaded {size:,} bytes")
+            
+            if size < 100000:  # Less than 100KB means it failed
+                raise Exception(f"File too small ({size} bytes) - not a valid zip")
             
             print("Extracting models...")
             with zipfile.ZipFile('models.zip', 'r') as z:
                 z.extractall('.')
             os.remove('models.zip')
-            print("✓ Models ready!")
+            print(f"✓ Models ready! Files: {os.listdir('models')}")
+            
         except Exception as e:
             print(f"✗ Model download failed: {e}")
-            print("  App will use statistical fallback predictions")
+            print("  Will use statistical fallback predictions")
     else:
-        print("✓ Models already present")
+        print(f"✓ Models already present: {len(os.listdir('models'))} files")
+        
+        
+        
 # Import hybrid prediction service if available
 try:
     from prediction_service import HybridPredictionService
