@@ -132,28 +132,27 @@ class Prediction(Base):
 
 # Database initialization
 def init_db(database_url=None):
-    """
-    Initialize the database
-    
-    Args:
-        database_url: PostgreSQL connection string (optional, uses config if not provided)
-    """
     if database_url is None:
         database_url = Config.get_database_url()
-    
-    # Create engine with PostgreSQL-specific settings
+
+    # ── SSL for AWS RDS ──
+    # RDS PostgreSQL 15+ requires SSL. When running on EC2
+    # (same VPC as RDS), sslmode=require is enough — no cert file needed.
+    connect_args = {}
+    if 'rds.amazonaws.com' in database_url:
+        connect_args = {"sslmode": "require"}
+
     engine = create_engine(
         database_url,
-        pool_size=10,  # Connection pool size
-        max_overflow=20,  # Max connections beyond pool_size
-        pool_pre_ping=True,  # Verify connections before using
-        echo=Config.SQLALCHEMY_ECHO  # Log SQL queries if enabled
+        pool_size=10,
+        max_overflow=20,
+        pool_pre_ping=True,
+        echo=Config.SQLALCHEMY_ECHO,
+        connect_args=connect_args
     )
-    
-    # Create all tables (won't recreate existing ones)
+
     Base.metadata.create_all(engine)
     print("✓ Database tables verified/created successfully")
-    
     return engine
 
 def get_session(engine):

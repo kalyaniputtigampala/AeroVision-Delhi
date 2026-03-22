@@ -1,11 +1,3 @@
-# import_data.py - FAST BULK VERSION
-# Uses pandas to_sql for bulk insert instead of row-by-row
-# Much faster — handles 39,000 rows per site without timeout
-#
-# Usage:
-#   python import_data.py           <- imports all sites
-#   python import_data.py --site 1  <- imports only site 1
-
 import os
 import argparse
 import pandas as pd
@@ -18,17 +10,24 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--site', type=int, help='Import only a specific site (1-7)')
 args = parser.parse_args()
 
-# ── Database connection ───────────────────────────────────────────────────────
-DB_HOST     = os.getenv('DB_HOST', 'localhost')
-DB_PORT     = os.getenv('DB_PORT', '5432')
-DB_NAME     = os.getenv('DB_NAME', 'air_quality_db')
-DB_USER     = os.getenv('DB_USER', 'postgres')
-DB_PASSWORD = os.getenv('DB_PASSWORD', '')
+# ── Support both local and AWS RDS ──
+DATABASE_URL = os.getenv('DATABASE_URL')
 
-# sslmode=require for Render, ignored on localhost
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}?sslmode=require"
-
-print(f"Connecting to: {DB_HOST}:{DB_PORT}/{DB_NAME}")
+if DATABASE_URL:
+    # AWS RDS — DATABASE_URL already set as environment variable
+    DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://')
+    if 'rds.amazonaws.com' in DATABASE_URL and 'sslmode' not in DATABASE_URL:
+        DATABASE_URL += '?sslmode=require'
+    print(f"Connecting using DATABASE_URL (AWS RDS mode)")
+else:
+    # Local — build from parts
+    DB_HOST     = os.getenv('DB_HOST', 'localhost')
+    DB_PORT     = os.getenv('DB_PORT', '5432')
+    DB_NAME     = os.getenv('DB_NAME', 'air_quality_db')
+    DB_USER     = os.getenv('DB_USER', 'postgres')
+    DB_PASSWORD = os.getenv('DB_PASSWORD', '')
+    DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    print(f"Connecting to database: {DB_HOST}:{DB_PORT}/{DB_NAME}")
 
 try:
     engine = create_engine(
@@ -44,32 +43,23 @@ except Exception as e:
     print(f"✗ Connection failed: {e}")
     exit(1)
 
+os.makedirs('exports', exist_ok=True)
 
 def import_csv(filepath):
-    """Bulk insert a CSV file into air_quality_data table."""
-
     print(f"Importing {filepath}...")
-
     if not os.path.exists(filepath):
         print(f"  ✗ File not found: {filepath}")
         return 0
 
-    # Read CSV
     df = pd.read_csv(filepath)
     print(f"  Read {len(df):,} rows")
 
-    # Drop id column — let PostgreSQL auto-generate
     if 'id' in df.columns:
         df = df.drop(columns=['id'])
-
-    # Convert timestamp
     if 'timestamp' in df.columns:
         df['timestamp'] = pd.to_datetime(df['timestamp'])
-
-    # Replace NaN with None
     df = df.where(pd.notnull(df), None)
 
-    # Check how many already exist for this site
     site_num = int(df['site_number'].iloc[0])
     try:
         with engine.connect() as conn:
@@ -82,22 +72,16 @@ def import_csv(filepath):
 
     if existing > 0:
         print(f"  ⚠ Site {site_num} already has {existing:,} rows — skipping.")
-        print(f"    Delete them first in pgAdmin if you want to reimport.")
         return 0
 
-    # Bulk insert in chunks of 5000 rows
     chunk_size = 5000
     total_inserted = 0
-
     for i in range(0, len(df), chunk_size):
         chunk = df.iloc[i:i + chunk_size]
         try:
             chunk.to_sql(
-                'air_quality_data',
-                engine,
-                if_exists='append',
-                index=False,
-                method='multi'
+                'air_quality_data', engine,
+                if_exists='append', index=False, method='multi'
             )
             total_inserted += len(chunk)
             print(f"  Progress: {total_inserted:,}/{len(df):,} rows inserted")
@@ -108,8 +92,7 @@ def import_csv(filepath):
     print(f"  ✓ Done: {total_inserted:,} rows inserted for site {site_num}\n")
     return total_inserted
 
-
-# ── Main ──────────────────────────────────────────────────────────────────────
+# ── Main ──
 total = 0
 exports_dir = "exports"
 
@@ -118,7 +101,6 @@ if not os.path.exists(exports_dir):
     exit(1)
 
 sites = [args.site] if args.site else range(1, 8)
-
 for site_num in sites:
     filepath = f"{exports_dir}/site_{site_num}_data.csv"
     total += import_csv(filepath)
