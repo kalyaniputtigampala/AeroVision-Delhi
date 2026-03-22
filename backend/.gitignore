@@ -29,10 +29,7 @@ Thumbs.db
 # Data files (large CSV files)
 data/*.csv
 
-# Model files (can be large)
-models/*.pkl
-models/*.h5
-models/*.keras
+
 
 # Logs
 *.log

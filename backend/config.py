@@ -21,7 +21,6 @@ class Config:
     # Construct database URL with encoded password
     SQLALCHEMY_DATABASE_URI = (
         f'postgresql://{DB_USER}:{DB_PASSWORD_ENCODED}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
-        f"?sslmode=require"
     )
     
     # SQLAlchemy settings

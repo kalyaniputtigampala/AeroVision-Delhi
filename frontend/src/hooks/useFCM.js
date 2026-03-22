@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { messaging, getToken, onMessage } from '../firebase-config';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+import { API_BASE_URL } from '../config';
+
 
 export const useFCM = () => {
   const [fcmToken, setFcmToken] = useState(null);

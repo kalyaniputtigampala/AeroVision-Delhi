@@ -22,12 +22,7 @@ firebase-service-account.json
 *.pem
 *.key
 
-# ── ML Models (large binary files) ───────────────────────────────────────────
-models/*.pkl
-hybrid_models/*.pkl
-*.pkl
-*.h5
-*.model
+
 
 # ── Database ──────────────────────────────────────────────────────────────────
 *.sqlite
