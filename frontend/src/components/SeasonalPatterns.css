@@ -199,18 +199,18 @@
   border: 2px solid #cffafe;
 }
 
-.section-header {
+.seasonal-section-header  {
   display: flex;
   align-items: center;
   gap: 0.8rem;
   margin-bottom: 1rem;
 }
 
-.section-header svg {
+.seasonal-section-header svg {
   color: #0891b2;
 }
 
-.section-header h2 {
+.seasonal-section-header h2 {
   font-size: 1.6rem;
   color: #1a3a52;
   font-weight: 700;

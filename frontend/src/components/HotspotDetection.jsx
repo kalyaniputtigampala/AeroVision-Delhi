@@ -173,7 +173,7 @@ const HotspotDetection = () => {
 
       {/* ================= RANKINGS ================= */}
       <div className="rankings-section">
-        <div className="section-header">
+        <div className="hotspot-section-header">
           <AlertTriangle size={24} />
           <h2>Hotspot Rankings</h2>
         </div>

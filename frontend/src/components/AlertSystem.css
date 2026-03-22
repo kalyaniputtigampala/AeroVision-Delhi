@@ -240,18 +240,18 @@
   border: 2px solid #cffafe;
 }
 
-.section-header {
+.alert-section-header {
   display: flex;
   align-items: center;
   gap: 0.8rem;
   margin-bottom: 1.5rem;
 }
 
-.section-header svg {
+.alert-section-header svg {
   color: #0891b2;
 }
 
-.section-header h2 {
+.alert-section-header h2 {
   font-size: 1.6rem;
   color: #1a3a52;
   font-weight: 700;

@@ -477,7 +477,7 @@ const AlertSystem = () => {
         </div>
 
         <div className="alerts-section">
-          <div className="section-header">
+          <div className="alert-section-header">
             <AlertTriangle size={24} />
             <h2>Active Alerts ({alerts.length})</h2>
           </div>

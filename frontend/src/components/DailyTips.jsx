@@ -365,7 +365,7 @@ const DailyTips = () => {
 
         {/* Tips Grid */}
         <div className="tips-section">
-          <div className="section-header">
+          <div className="tips-section-header">
             <Lightbulb size={24} />
             <h2>
               {selectedCategory === 'all' ? 'All Recommendations' :

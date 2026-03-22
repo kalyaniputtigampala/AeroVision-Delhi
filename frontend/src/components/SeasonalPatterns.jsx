@@ -203,7 +203,7 @@ const SeasonalPatterns = () => {
 
         {/* Monthly Trends Chart */}
         <div className="chart-section">
-          <div className="section-header">
+          <div className="seasonal-section-header ">
             <TrendingUp size={24} />
             <h2>Monthly Pollution Trends</h2>
           </div>
@@ -249,7 +249,7 @@ const SeasonalPatterns = () => {
 
         {/* Seasonal Comparison Bar Chart */}
         <div className="chart-section">
-          <div className="section-header">
+          <div className="seasonal-section-header ">
             <TrendingUp size={24} />
             <h2>Seasonal Comparison</h2>
           </div>
